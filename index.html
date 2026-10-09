@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Engineering showcase and interactive dashboard for a high-speed vision-guided Ackermann autonomous inspection vehicle." />
+  <meta name="theme-color" content="#090c10" />
+  <title>HVAIV — atom Inspection Vehicle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#home" class="wordmark">
+        <span class="wordmark-mark">AV</span>
+        <span>
+          <strong>HVAIV</strong>
+          <small>ENGINEERING SYSTEM</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+        <span class="sr-only">Open navigation</span>
+      </button>
+
+      <nav class="main-nav" id="mainNav">
+        <a href="#system">SYSTEM</a>
+        <a href="#architecture">ARCHITECTURE</a>
+        <a href="#updates">BUILD LOG</a>
+        <a href="#control">CONTROL</a>
+        <a href="#telemetry">TELEMETRY</a>
+        <a href="#hardware">HARDWARE</a>
+        <a href="#testing">TESTING</a>
+        <a href="#resources">REFERENCES</a>
+      </nav>
+
+      <div class="header-status">
+        <span class="status-dot"></span>
+        DEVELOPMENT / ACTIVE
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="home" class="hero section">
+      <div class="grid-bg" aria-hidden="true"></div>
+      <div class="hero-content">
+        <div class="eyebrow"><span>00</span> AUTONOMOUS VEHICLE DEVELOPMENT / 2026</div>
+        <h1>
+          HIGH-SPEED<br />
+          <span>VISION-GUIDED</span><br />
+          AUTONOMOUS<br />
+          INSPECTION VEHICLE
+        </h1>
+        <p class="hero-lead">
+          An Ackermann-steering inspection vehicle designed for trajectory tracking and stable operation
+          with a payload requirement of up to <strong>5 kg</strong>. Current bring-up prioritises IR line
+          sensing; mobile-phone vision remains an experimental development path.
+        </p>
+        <div class="hero-current-note"><span class="status-dot"></span><strong>CURRENT FOCUS</strong> IR SENSOR + SERVO BENCH BRING-UP <span class="note-divider">/</span> CAMERA VISION R&amp;D</div>
+
+        <div class="hero-actions">
+          <button class="btn btn-primary" data-scroll="#system">EXPLORE SYSTEM <span>→</span></button>
+          <button class="btn btn-secondary" data-scroll="#telemetry">OPEN TELEMETRY <span>↗</span></button>
+        </div>
+
+        <div class="hero-meta" id="heroMeta">
+          <div><span>STEERING</span><strong>ACKERMANN</strong></div>
+          <div><span>NAVIGATION</span><strong>IR FIRST / VISION R&amp;D</strong></div>
+          <div><span>CONTROLLER</span><strong>ESP32-S3</strong></div>
+          <div><span>PAYLOAD</span><strong>UP TO 5 KG</strong></div>
+        </div>
+      </div>
+
+      <div class="hero-vehicle" aria-label="Conceptual technical illustration of the vehicle">
+        <div class="vehicle-label label-camera">PHONE CAMERA / R&amp;D OPTION</div>
+        <div class="vehicle-label label-control">IR + ESP32-S3 / CURRENT BRING-UP</div>
+        <div class="vehicle-svg-wrap">
+          <svg class="vehicle-svg" viewBox="0 0 620 470" role="img" aria-label="Top view vehicle diagram">
+            <defs>
+              <pattern id="microGrid" width="22" height="22" patternUnits="userSpaceOnUse">
+                <path d="M22 0H0V22" fill="none" stroke="currentColor" stroke-width="0.5"/>
+              </pattern>
+              <filter id="softGlow">
+                <feGaussianBlur stdDeviation="3" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <rect x="0" y="0" width="620" height="470" fill="url(#microGrid)" opacity=".32"/>
+            <path class="path-shadow" d="M75 408 C95 330 105 275 180 240 C270 200 355 235 410 170 C472 100 505 86 570 55"/>
+            <path class="trajectory-line" d="M75 408 C95 330 105 275 180 240 C270 200 355 235 410 170 C472 100 505 86 570 55"/>
+            <g class="annotation">
+              <line x1="450" y1="105" x2="510" y2="72"/>
+              <text x="515" y="68">LOOK-AHEAD</text>
+              <text x="515" y="84">FIELD OF VIEW</text>
+            </g>
+            <g transform="translate(170,165)">
+              <rect class="chassis" x="0" y="35" width="250" height="155" rx="24"/>
+              <rect class="deck" x="38" y="52" width="174" height="105" rx="12"/>
+              <rect class="payload-box" x="88" y="72" width="80" height="60" rx="6"/>
+              <text class="payload-text" x="128" y="98" text-anchor="middle">PAYLOAD</text>
+              <text class="payload-sub" x="128" y="116" text-anchor="middle">≤ 5 KG</text>
+
+              <g class="wheel-group">
+                <rect class="wheel" x="-18" y="56" width="28" height="65" rx="7"/>
+                <rect class="wheel" x="240" y="56" width="28" height="65" rx="7"/>
+                <rect class="wheel" x="20" y="148" width="28" height="65" rx="7"/>
+                <rect class="wheel" x="202" y="148" width="28" height="65" rx="7"/>
+              </g>
+
+              <rect class="servo" x="99" y="23" width="52" height="18" rx="4"/>
+              <line class="axle" x1="16" y1="145" x2="234" y2="145"/>
+
+              <g class="camera-pod">
+                <rect x="100" y="-25" width="50" height="30" rx="6"/>
+                <circle cx="125" cy="-10" r="7"/>
+                <line x1="108" y1="4" x2="96" y2="30"/>
+                <line x1="142" y1="4" x2="154" y2="30"/>
+              </g>
+
+              <g class="annotation">
+                <line x1="-45" y1="85" x2="-18" y2="85"/>
+                <text x="-136" y="81">FRONT STEERING</text>
+                <text x="-136" y="98">ACKERMANN AXLE</text>
+                <line x1="268" y1="176" x2="310" y2="176"/>
+                <text x="318" y="173">REAR DRIVE</text>
+                <text x="318" y="190">DC MOTORS</text>
+              </g>
+            </g>
+            <g class="dimension">
+              <line x1="140" y1="392" x2="420" y2="392"/>
+              <line x1="140" y1="384" x2="140" y2="400"/>
+              <line x1="420" y1="384" x2="420" y2="400"/>
+              <text x="280" y="414" text-anchor="middle">CONCEPTUAL VEHICLE ENVELOPE</text>
+            </g>
+          </svg>
+        </div>
+        <div class="hero-caption">
+          <span>FIG. 01</span>
+          <strong>CONCEPT / NOT A FABRICATION DRAWING</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATUS BAR -->
+    <section class="status-strip" aria-label="Project development status">
+      <div class="status-item"><span>MECHANICAL</span><b class="status-in-progress">FABRICATION IN PROGRESS</b></div>
+      <div class="status-item"><span>ELECTRONICS</span><b class="status-in-progress">SCHEMATIC / WIRING REVIEW</b></div>
+      <div class="status-item"><span>IR ARRAY</span><b class="status-testing">CHANNEL RETEST PENDING</b></div>
+      <div class="status-item"><span>MOTOR SELECTION</span><b class="status-warning">NOT FINAL</b></div>
+      <div class="status-item"><span>FULL INTEGRATION</span><b class="status-warning">VALIDATION PENDING</b></div>
+    </section>
+
+    <!-- CHAT-DERIVED CURRENT STATE -->
+    <section id="updates" class="section updates-section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>00A</span> BUILD LOG / 04–08 OCT 2026</div>
+        <h2>Latest team updates.<br /><em>Plans are not test results.</em></h2>
+      </div>
+      <div class="update-summary-grid">
+        <article class="update-summary primary-update">
+          <span class="update-index">CURRENT BRING-UP</span>
+          <h3>IR + SERVO FIRST</h3>
+          <p>The latest discussion prioritises getting a basic, testable vehicle path working with IR sensing and the Ackermann steering servo. The IR array still needs a full channel check.</p>
+          <span class="update-state state-amber">TESTING / RETEST REQUIRED</span>
+        </article>
+        <article class="update-summary">
+          <span class="update-index">VISION R&amp;D</span>
+          <h3>PHONE CAMERA PATH</h3>
+          <p>Wireless phone-camera streaming, grayscale/ROI processing and look-ahead PID remain a development branch. Latency, processing location, mounting and CG impact are unresolved.</p>
+          <span class="update-state state-cyan">EXPERIMENTAL</span>
+        </article>
+        <article class="update-summary">
+          <span class="update-index">INTEGRATION RISK</span>
+          <h3>MOTOR / DRIVER TBD</h3>
+          <p>The initial motor choice was questioned for torque. Alternative motors and drivers were discussed, but the chat does not confirm a final compatible motor-driver pair.</p>
+          <span class="update-state state-red">DECISION OPEN</span>
+        </article>
+      </div>
+
+      <div class="build-timeline">
+        <article class="timeline-entry"><time>04 OCT</time><div><h3>Problem and architecture options</h3><p>The 5 kg payload and marked-course challenge were shared. Motor driver, line sensing and camera-based navigation were still being explored.</p></div><span>DISCOVERY</span></article>
+        <article class="timeline-entry"><time>05 OCT</time><div><h3>Phone-camera idea debated</h3><p>The team discussed a wireless phone-camera stream, but also raised processing/latency uncertainty, camera mount complexity and the effect of mounting height on centre of gravity.</p></div><span>R&amp;D</span></article>
+        <article class="timeline-entry"><time>06 OCT</time><div><h3>ESP32-S3 and look-ahead concept</h3><p>The ESP32-S3 was reported obtained. A roughly 45° camera angle and 20–35 cm look-ahead region were discussed as design concepts, not validated measurements.</p></div><span>BRING-UP</span></article>
+        <article class="timeline-entry"><time>07 OCT</time><div><h3>Mechanical and electrical risks surfaced</h3><p>The earlier motor was called the wrong motor; torque and alternatives were discussed. A rough 20 × 30 cm chassis envelope was mentioned, but final geometry and motor choice remain unconfirmed.</p></div><span>OPEN ISSUES</span></article>
+        <article class="timeline-entry"><time>08 OCT</time><div><h3>Schematic, pin mapping and component checks</h3><p>A schematic was reported completed and fabrication/test clips were shared. The servo PWM pin assignment was questioned, and one IR sensor was reported not working; full system validation is not confirmed.</p></div><span>VALIDATION</span></article>
+      </div>
+      <p class="source-note">This log summarises the team chat exported on 9 October 2026. It records discussion, reported status and open questions; it does not independently verify hardware behavior.</p>
+    </section>
+
+    <!-- CHALLENGE -->
+    <section id="system" class="section dark-panel">
+      <div class="section-heading">
+        <div class="section-kicker"><span>01</span> THE CHALLENGE</div>
+        <h2>Speed means nothing<br /><em>without control.</em></h2>
+      </div>
+
+      <div class="challenge-grid">
+        <div class="challenge-copy">
+          <p class="section-lead">
+            The vehicle must autonomously navigate a marked industrial trajectory containing straight
+            sections, bends, changing curvature and difficult turns — while balancing speed, trajectory
+            accuracy and stability with a payload requirement of up to 5 kg.
+          </p>
+
+          <div class="objective-table">
+            <div class="objective-row">
+              <span>01</span>
+              <div><strong>TRAJECTORY ACCURACY</strong><small>Maintain alignment with the intended path.</small></div>
+            </div>
+            <div class="objective-row">
+              <span>02</span>
+              <div><strong>INTELLIGENT SPEED</strong><small>Reduce target speed before difficult curvature.</small></div>
+            </div>
+            <div class="objective-row">
+              <span>03</span>
+              <div><strong>STEERING RESPONSE</strong><small>Translate detected error into controllable steering action.</small></div>
+            </div>
+            <div class="objective-row">
+              <span>04</span>
+              <div><strong>LOAD STABILITY</strong><small>Maintain traction and predictable behavior under payload.</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trajectory-card">
+          <div class="panel-topline">
+            <span>TRAJECTORY PROFILE</span>
+            <span class="tag cyan">SIMULATION</span>
+          </div>
+          <svg viewBox="0 0 680 360" class="trajectory-svg">
+            <defs>
+              <pattern id="sectionGrid" width="34" height="34" patternUnits="userSpaceOnUse">
+                <path d="M34 0H0V34" fill="none" stroke="currentColor" stroke-width=".7"/>
+              </pattern>
+            </defs>
+            <rect width="680" height="360" fill="url(#sectionGrid)" opacity=".25"/>
+            <path class="trajectory-route-shadow" d="M34 292 C105 292 120 120 233 122 S365 286 454 234 S545 100 646 75"/>
+            <path class="trajectory-route" id="routeMain" d="M34 292 C105 292 120 120 233 122 S365 286 454 234 S545 100 646 75"/>
+            <circle class="route-node" cx="184" cy="92" r="5"/>
+            <circle class="route-node" cx="365" cy="280" r="5"/>
+            <circle class="route-node" cx="522" cy="155" r="5"/>
+            <g class="svg-label"><text x="154" y="72">BEND</text><text x="335" y="307">SHARP TURN</text><text x="500" y="133">EXIT</text></g>
+            <g class="moving-dot" id="trajectoryDot"><circle r="7" cx="34" cy="292"/></g>
+          </svg>
+          <div class="trajectory-legend">
+            <span><i class="legend-line"></i> TARGET PATH</span>
+            <span><i class="legend-dot"></i> LOOK-AHEAD EVENT</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ARCHITECTURE -->
+    <section id="architecture" class="section">
+      <div class="section-heading">
+        <div class="section-kicker"><span>02</span> SYSTEM ARCHITECTURE</div>
+        <h2>From camera pixels<br />to <em>steering command.</em></h2>
+      </div>
+
+      <div class="current-paths">
+        <article class="path-lane lane-bringup">
+          <div class="path-lane-heading"><span>PATH A / IMMEDIATE BRING-UP</span><b>IR LINE SENSING</b></div>
+          <div class="path-chain"><span>IR ARRAY</span><i>→</i><span>ESP32-S3</span><i>→</i><span>PID / LOGIC</span><i>→</i><span>SERVO + REAR DRIVE</span></div>
+          <p><strong>Known issue from latest chat:</strong> one IR sensor was reported nonfunctional; re-test every channel before claiming reliable line tracking.</p>
+        </article>
+        <article class="path-lane lane-vision">
+          <div class="path-lane-heading"><span>PATH B / EXPERIMENTAL R&amp;D</span><b>PHONE-CAMERA VISION</b></div>
+          <div class="path-chain"><span>PHONE STREAM</span><i>→</i><span>FRAME / ROI</span><i>→</i><span>PATH + ERROR</span><i>→</i><span>PID / ACTUATION</span></div>
+          <p>Latency, frame rate, processing split, camera orientation and centre-of-gravity effects still require investigation.</p>
+        </article>
+      </div>
+
+      <div class="architecture-detail-label">VISION R&amp;D CHAIN / SELECT A BLOCK TO INSPECT</div>
+      <div class="architecture-flow">
+        <button class="flow-node" data-architecture="camera">
+          <span>01</span><strong>MOBILE CAMERA</strong><small>Live visual input</small>
+        </button>
+        <div class="flow-arrow">↓</div>
+        <button class="flow-node" data-architecture="stream">
+          <span>02</span><strong>WIRELESS STREAM</strong><small>Frame transport</small>
+        </button>
+        <div class="flow-arrow">↓</div>
+        <button class="flow-node" data-architecture="esp">
+          <span>03</span><strong>ESP32-S3</strong><small>Embedded node</small>
+        </button>
+        <div class="flow-arrow">↓</div>
+        <button class="flow-node" data-architecture="vision">
+          <span>04</span><strong>VISION PROCESSING</strong><small>Preprocess + detect</small>
+        </button>
+        <div class="flow-arrow">↓</div>
+        <button class="flow-node" data-architecture="error">
+          <span>05</span><strong>PATH / ERROR</strong><small>Centroid extraction</small>
+        </button>
+        <div class="flow-arrow">↓</div>
+        <button class="flow-node highlight" data-architecture="pid">
+          <span>06</span><strong>PID CONTROL</strong><small>Correction model</small>
+        </button>
+        <div class="flow-arrow">↓</div>
+        <button class="flow-node" data-architecture="actuation">
+          <span>07</span><strong>ACTUATION</strong><small>Steering + motors</small>
+        </button>
+      </div>
+
+      <div class="architecture-info" id="architectureInfo">
+        <div>
+          <span class="info-label">SELECTED NODE</span>
+          <strong id="architectureTitle">MOBILE CAMERA</strong>
+        </div>
+        <p id="architectureDescription">Current vision input for the design concept. It provides the live frame used for path observation and look-ahead control.</p>
+        <span class="info-state" id="architectureState">DESIGN CONCEPT</span>
+      </div>
+    </section>
+
+    <!-- ROBOT ARCHITECTURE -->
+    <section class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>03</span> INTERACTIVE VEHICLE ARCHITECTURE</div>
+        <h2>Every subsystem has<br /><em>a job.</em></h2>
+      </div>
+
+      <div class="architecture-workbench">
+        <div class="blueprint">
+          <div class="blueprint-grid"></div>
+          <svg viewBox="0 0 720 480" class="blueprint-svg">
+            <g transform="translate(190,70)">
+              <rect class="bp-chassis" x="0" y="55" width="340" height="260" rx="34"/>
+              <rect class="bp-deck" x="44" y="93" width="252" height="184" rx="18"/>
+              <rect class="bp-payload" x="112" y="130" width="116" height="82" rx="8" data-part="payload"/>
+              <text x="170" y="166" text-anchor="middle">PAYLOAD</text>
+              <text x="170" y="185" text-anchor="middle" class="subtext">UP TO 5 KG</text>
+
+              <rect class="bp-esp" x="62" y="235" width="92" height="32" rx="4" data-part="esp">ESP32-S3</rect>
+              <rect class="bp-battery" x="176" y="235" width="120" height="32" rx="4" data-part="battery">POWER / BATTERY</rect>
+              <rect class="bp-servo" x="142" y="34" width="56" height="19" rx="4" data-part="servo"/>
+              <rect class="bp-driver" x="244" y="226" width="48" height="20" rx="3" data-part="driver"/>
+              <circle class="bp-camera" cx="170" cy="6" r="18" data-part="camera"/>
+              <line x1="158" y1="20" x2="146" y2="54"/>
+              <line x1="182" y1="20" x2="194" y2="54"/>
+
+              <rect class="bp-wheel front left" x="-24" y="85" width="29" height="78" rx="8"/>
+              <rect class="bp-wheel front right" x="335" y="85" width="29" height="78" rx="8"/>
+              <rect class="bp-wheel rear left" x="-24" y="222" width="29" height="78" rx="8" data-part="motors"/>
+              <rect class="bp-wheel rear right" x="335" y="222" width="29" height="78" rx="8" data-part="motors"/>
+
+              <circle class="bp-encoder" cx="20" cy="260" r="8" data-part="encoders"/>
+              <circle class="bp-encoder" cx="320" cy="260" r="8" data-part="encoders"/>
+              <rect class="bp-ir" x="145" y="304" width="50" height="12" rx="2" data-part="ir"/>
+            </g>
+
+            <g class="bp-label">
+              <line x1="360" y1="68" x2="360" y2="30"/>
+              <text x="360" y="22" text-anchor="middle">CAMERA / LOOK-AHEAD</text>
+
+              <line x1="210" y1="195" x2="110" y2="160"/>
+              <text x="102" y="156" text-anchor="end">ESP32-S3</text>
+
+              <line x1="500" y1="240" x2="610" y2="200"/>
+              <text x="620" y="196">STEERING SERVO</text>
+
+              <line x1="515" y1="350" x2="620" y2="340"/>
+              <text x="630" y="336">WHEEL ENCODERS</text>
+
+              <line x1="335" y1="425" x2="300" y2="466"/>
+              <text x="290" y="476" text-anchor="middle">IR BACKUP SENSORS</text>
+            </g>
+          </svg>
+          <div class="blueprint-caption">TOP VIEW / CONCEPTUAL ARCHITECTURE</div>
+
+          <button class="component-hit hit-camera" data-part="camera">01</button>
+          <button class="component-hit hit-esp" data-part="esp">02</button>
+          <button class="component-hit hit-servo" data-part="servo">03</button>
+          <button class="component-hit hit-motors" data-part="motors">04</button>
+          <button class="component-hit hit-encoders" data-part="encoders">05</button>
+          <button class="component-hit hit-ir" data-part="ir">06</button>
+          <button class="component-hit hit-battery" data-part="battery">07</button>
+          <button class="component-hit hit-driver" data-part="driver">08</button>
+          <button class="component-hit hit-payload" data-part="payload">09</button>
+        </div>
+
+        <aside class="component-panel">
+          <span class="info-label">COMPONENT INSPECTOR</span>
+          <h3 id="partTitle">MOBILE CAMERA</h3>
+          <p id="partDescription">Current vision input for the concept system. The phone provides the live video stream used for path observation and look-ahead control.</p>
+
+          <div class="component-data" id="partData">
+            <div><span>ROLE</span><strong>VISION INPUT</strong></div>
+            <div><span>STATUS</span><strong>UNDER INTEGRATION</strong></div>
+            <div><span>SPEC</span><strong>CONFIGURABLE</strong></div>
+          </div>
+
+          <div class="data-warning">
+            <strong>⚠ ENGINEERING NOTE</strong>
+            <p>Information is design-level unless explicitly marked as measured. No unverified hardware specification is presented as final.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ELECTRICAL + INTEGRATION CHECKLIST -->
+    <section class="section integration-checks">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>03A</span> OPEN ENGINEERING CHECKS</div>
+        <h2>Resolve the interfaces<br /><em>before final wiring.</em></h2>
+      </div>
+      <div class="check-grid">
+        <article class="check-card"><span class="check-code">EL-01 / LOGIC LEVEL</span><h3>IR ARRAY → ESP32-S3</h3><p>The chat raised a possible 5 V sensor output versus 3.3 V ESP32-S3 GPIO issue. Check the exact board/output circuit before direct connection; add level shifting if required.</p><b class="check-status status-warning">VERIFY ELECTRICALLY</b></article>
+        <article class="check-card"><span class="check-code">FW-02 / PWM MAPPING</span><h3>SERVO GPIO</h3><p>GPIO 36 was proposed in discussion and then questioned. Do not treat it as a final pin mapping; verify the exact board pinout and PWM-capable assignment before soldering.</p><b class="check-status status-warning">PIN MAP NOT FINAL</b></article>
+        <article class="check-card"><span class="check-code">PWR-03 / MOTOR DRIVER</span><h3>CURRENT + TOPOLOGY</h3><p>Driver candidates were discussed, but the final model is not confirmed. Match driver topology and continuous/stall current to the selected motors; do not assume an IC/module can drive both motors without checking its datasheet.</p><b class="check-status status-warning">MODEL / RATINGS TBD</b></article>
+        <article class="check-card"><span class="check-code">PWR-04 / DISTRIBUTION</span><h3>BATTERY, BUCKS &amp; SWITCH</h3><p>Two buck converters and a main switch were discussed. Confirm battery configuration, regulator output/current, servo supply, common ground and power-switch rating from the actual schematic.</p><b class="check-status status-in-progress">REVIEW SCHEMATIC</b></article>
+        <article class="check-card"><span class="check-code">ME-05 / STEERING</span><h3>SERVO + LINKAGE</h3><p>One servo is intended to drive the front Ackermann linkage. Verify steering travel, horn geometry, linkage clearance and servo load with the final chassis.</p><b class="check-status status-testing">BENCH / MECHANICAL TEST</b></article>
+        <article class="check-card"><span class="check-code">FB-06 / ENCODERS</span><h3>RPM + ODOMETRY</h3><p>Encoders are intended to support wheel RPM feedback and odometry. Confirm wiring, pulse counting and direction behavior before using their values in control.</p><b class="check-status status-in-progress">INTEGRATION TASK</b></article>
+      </div>
+      <p class="source-note">These are verification prompts distilled from the team discussion, not a substitute for the actual schematic, board pinout, component datasheets or mentor review.</p>
+    </section>
+
+    <!-- VISION -->
+    <section id="vision" class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>04</span> VISION PIPELINE</div>
+        <h2>Give the robot<br /><em>its eyes.</em></h2>
+      </div>
+
+      <div class="vision-lab">
+        <div class="vision-stage panel">
+          <div class="panel-topline">
+            <span>CAMERA FRAME / SIMULATION</span>
+            <span class="tag" id="visionStageLabel">RAW FRAME</span>
+          </div>
+
+          <div class="vision-frame">
+            <div class="vision-road"></div>
+            <div class="vision-track-line"></div>
+            <div class="vision-centerline"></div>
+            <div class="vision-roi"><span>ROI</span></div>
+            <div class="vision-centroid"><i></i><span>CENTROID</span></div>
+            <div class="vision-error"><span id="visionError">+14 px</span></div>
+            <div class="vision-watermark">SIMULATION</div>
+          </div>
+
+          <div class="vision-tabs">
+            <button class="vision-tab active" data-vision-step="0">FRAME</button>
+            <button class="vision-tab" data-vision-step="1">GRAYSCALE</button>
+            <button class="vision-tab" data-vision-step="2">ROI</button>
+            <button class="vision-tab" data-vision-step="3">PATH</button>
+            <button class="vision-tab" data-vision-step="4">CENTROID</button>
+            <button class="vision-tab" data-vision-step="5">ERROR</button>
+          </div>
+        </div>
+
+        <div class="vision-flow">
+          <button class="vision-flow-item active" data-vision-step="0">
+            <span>01</span><strong>LIVE FRAME</strong><small>Incoming video</small>
+          </button>
+          <button class="vision-flow-item" data-vision-step="1">
+            <span>02</span><strong>PREPROCESS</strong><small>Grayscale / filtering</small>
+          </button>
+          <button class="vision-flow-item" data-vision-step="2">
+            <span>03</span><strong>REGION OF INTEREST</strong><small>Focus on track area</small>
+          </button>
+          <button class="vision-flow-item" data-vision-step="3">
+            <span>04</span><strong>PATH DETECTION</strong><small>Extract trajectory</small>
+          </button>
+          <button class="vision-flow-item" data-vision-step="4">
+            <span>05</span><strong>CENTROID</strong><small>Detected path center</small>
+          </button>
+          <button class="vision-flow-item" data-vision-step="5">
+            <span>06</span><strong>TRACKING ERROR</strong><small>Desired − detected center</small>
+          </button>
+        </div>
+      </div>
+
+      <div class="lookahead-concept">
+        <div>
+          <span class="info-label">CAMERA GEOMETRY / DESIGN CONCEPT</span>
+          <h3>Look ahead, not just underneath.</h3>
+          <p>
+            The discussed concept places the phone camera at approximately <strong>45° downward</strong> and
+            observes roughly <strong>20–35 cm ahead</strong> to provide look-ahead information. These are
+            unvalidated design concepts; mounting position must also be checked against visibility and centre of gravity.
+          </p>
+        </div>
+        <div class="lookahead-diagram">
+          <div class="camera-ray"></div>
+          <div class="lookahead-ground"><span>20–35 CM / PRELIMINARY</span></div>
+          <div class="camera-graphic">CAM</div>
+          <div class="angle-mark">≈45°</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PID CONTROL -->
+    <section id="control" class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="heading-row">
+          <div>
+            <div class="section-kicker"><span>05</span> CONTROL LAB</div>
+            <h2>Tune the <em>response.</em></h2>
+          </div>
+          <span class="tag warning">SIMULATION / DEMO VALUES</span>
+        </div>
+      </div>
+
+      <div class="control-lab">
+        <div class="control-sidebar">
+          <div class="slider-group">
+            <label for="kp"><span>Kp</span><output id="kpValue">1.20</output></label>
+            <input id="kp" type="range" min="0" max="3" step="0.01" value="1.20" />
+          </div>
+          <div class="slider-group">
+            <label for="ki"><span>Ki</span><output id="kiValue">0.08</output></label>
+            <input id="ki" type="range" min="0" max="0.5" step="0.01" value="0.08" />
+          </div>
+          <div class="slider-group">
+            <label for="kd"><span>Kd</span><output id="kdValue">0.35</output></label>
+            <input id="kd" type="range" min="0" max="1.5" step="0.01" value="0.35" />
+          </div>
+          <div class="slider-group">
+            <label for="baseSpeed"><span>BASE SPEED</span><output id="speedValue">3.2 m/s</output></label>
+            <input id="baseSpeed" type="range" min="1" max="4" step="0.1" value="3.2" />
+          </div>
+
+          <div class="pid-formula">
+            <span>CONTROL MODEL</span>
+            <code>Error = Desired − Detected</code>
+            <code>Correction = Kp·E + Ki·∫E + Kd·dE/dt</code>
+          </div>
+
+          <div class="pid-status">
+            <span id="pidStatusDot"></span>
+            <strong id="pidStatusText">STABLE RESPONSE</strong>
+          </div>
+        </div>
+
+        <div class="control-graph panel">
+          <div class="panel-topline">
+            <span>STEERING RESPONSE</span>
+            <span>CANVAS / SIMULATION</span>
+          </div>
+          <canvas id="pidCanvas" width="1000" height="360" aria-label="Simulated PID steering response graph"></canvas>
+          <div class="graph-footer"><span>TIME →</span><span>SIMULATED RESPONSE ONLY</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPEED CONTROL -->
+    <section class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>06</span> LOOK-AHEAD SPEED MANAGEMENT</div>
+        <h2>See the turn<br /><em>before it arrives.</em></h2>
+      </div>
+
+      <div class="speed-management panel">
+        <div class="speed-track">
+          <div class="speed-zone zone-straight">
+            <span>STRAIGHT</span><strong>HIGH</strong>
+          </div>
+          <div class="speed-zone zone-gentle">
+            <span>GENTLE CURVE</span><strong>MODERATE</strong>
+          </div>
+          <div class="speed-zone zone-sharp">
+            <span>SHARP CURVE</span><strong>REDUCED</strong>
+          </div>
+          <div class="speed-zone zone-exit">
+            <span>EXIT</span><strong>RECOVER</strong>
+          </div>
+
+          <div class="speed-path"></div>
+          <div class="speed-car" id="speedCar">
+            <span></span>
+          </div>
+          <div class="lookahead-bracket" id="lookaheadBracket">
+            <span>LOOK-AHEAD</span>
+          </div>
+        </div>
+
+        <div class="speed-control-row">
+          <div class="speed-readout">
+            <span>TARGET SPEED</span>
+            <strong id="targetSpeed">3.8</strong>
+            <small>m/s · SIMULATION</small>
+          </div>
+          <div class="speed-readout">
+            <span>CURVATURE</span>
+            <strong id="curvatureState">LOW</strong>
+            <small>LOOK-AHEAD ESTIMATE</small>
+          </div>
+          <button class="btn btn-primary" id="speedRun">RUN SCENARIO <span>→</span></button>
+        </div>
+      </div>
+
+      <div class="sequence-note">
+        <span>CONTROL SEQUENCE</span>
+        <strong>UPCOMING BEND DETECTED</strong><i>→</i>
+        <strong>CURVATURE ESTIMATED</strong><i>→</i>
+        <strong>TARGET SPEED REDUCED</strong><i>→</i>
+        <strong>STEERING ADJUSTED</strong><i>→</i>
+        <strong>SPEED RECOVERED</strong>
+      </div>
+    </section>
+
+    <!-- PRELIMINARY SPEED -->
+    <section class="section compact-band dark-panel">
+      <div>
+        <span class="info-label">PRELIMINARY SPEED ESTIMATE</span>
+        <strong class="big-stat">~4 m/s</strong>
+      </div>
+      <div>
+        <span class="tag warning">VALIDATION PENDING</span>
+        <p>Preliminary motor-calculation estimate only. The motor choice behind this estimate was later questioned, so the figure is not an achieved speed and must be recalculated with the final motor, driver, battery and payload.</p>
+      </div>
+    </section>
+
+    <!-- TELEMETRY -->
+    <section id="telemetry" class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="heading-row">
+          <div>
+            <div class="section-kicker"><span>07</span> VEHICLE TELEMETRY</div>
+            <h2>Mission <em>control.</em></h2>
+          </div>
+          <span class="tag warning">DEMO / SIMULATION DATA</span>
+        </div>
+      </div>
+
+      <div class="telemetry-grid">
+        <article class="metric-card metric-large">
+          <span>SPEED</span><strong id="telemetrySpeed">3.42</strong><small>m/s</small><em>▲ simulated</em>
+        </article>
+        <article class="metric-card">
+          <span>STEERING</span><strong id="steeringValue">+4.8°</strong><small>servo command</small>
+        </article>
+        <article class="metric-card">
+          <span>PATH ERROR</span><strong id="pathErrorValue">+14</strong><small>pixels / demo</small>
+        </article>
+        <article class="metric-card">
+          <span>FRAME RATE</span><strong id="fpsValue">29.7</strong><small>FPS / simulated</small>
+        </article>
+        <article class="metric-card">
+          <span>BATTERY</span><strong id="batteryValue">82</strong><small>% / simulated</small>
+        </article>
+        <article class="metric-card">
+          <span>PAYLOAD</span><strong>5.0</strong><small>kg max design requirement</small>
+        </article>
+        <article class="metric-card status-card">
+          <span>PID</span><strong><i class="live-light"></i>ACTIVE</strong><small>simulation</small>
+        </article>
+        <article class="metric-card status-card">
+          <span>CAMERA</span><strong><i class="live-light"></i>ONLINE</strong><small>demo stream</small>
+        </article>
+        <article class="metric-card status-card">
+          <span>ENCODER</span><strong class="amber"><i class="amber-light"></i>TESTING</strong><small>integration</small>
+        </article>
+      </div>
+
+      <div class="telemetry-chart panel">
+        <div class="panel-topline">
+          <span>SPEED / PATH ERROR TRACE</span>
+          <span>DEMO STREAM</span>
+        </div>
+        <canvas id="telemetryCanvas" width="1200" height="300" aria-label="Simulated telemetry chart"></canvas>
+        <div class="chart-legend">
+          <span><i class="line-cyan"></i>SPEED</span>
+          <span><i class="line-white"></i>PATH ERROR</span>
+          <span>REAL DATA CONNECTION: FUTURE</span>
+        </div>
+      </div>
+
+      <div class="future-data">
+        <span class="info-label">FUTURE TELEMETRY INTERFACE</span>
+        <div class="future-flow">
+          <b>ESP32-S3</b><i>→</i><b>TELEMETRY DATA</b><i>→</i><b>WI-FI / NETWORK</b><i>→</i><b>API / WEBSOCKET / MQTT</b><i>→</i><b>WEB DASHBOARD</b>
+        </div>
+        <p>The dashboard is structured so simulated values can later be replaced by a real telemetry data source.</p>
+      </div>
+    </section>
+
+    <!-- ACKERMANN -->
+    <section class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>08</span> ACKERMANN STEERING</div>
+        <h2>Geometry matters<br /><em>at speed.</em></h2>
+      </div>
+
+      <div class="ackermann-grid">
+        <div class="ackermann-visual panel">
+          <div class="steer-center">TURNING CENTER</div>
+          <svg viewBox="0 0 640 400" aria-label="Ackermann geometry diagram">
+            <path class="radius outer-radius" d="M100 310 A285 285 0 0 1 560 70"/>
+            <path class="radius inner-radius" d="M175 310 A210 210 0 0 1 560 125"/>
+            <circle cx="560" cy="70" r="7"/>
+            <g class="ack-car">
+              <rect x="225" y="175" width="245" height="105" rx="18"/>
+              <rect class="ack-wheel wfl" x="205" y="163" width="24" height="58" rx="7"/>
+              <rect class="ack-wheel wfr" x="466" y="145" width="24" height="58" rx="7"/>
+              <rect class="ack-wheel wrl" x="215" y="258" width="24" height="58" rx="7"/>
+              <rect class="ack-wheel wrr" x="456" y="258" width="24" height="58" rx="7"/>
+              <line x1="226" y1="235" x2="468" y2="235"/>
+              <text x="348" y="225" text-anchor="middle">CHASSIS</text>
+            </g>
+            <text x="116" y="335">INNER RADIUS</text>
+            <text x="462" y="56">OUTER RADIUS</text>
+            <text x="270" y="152">FRONT STEERING</text>
+          </svg>
+
+          <div class="steering-slider">
+            <label for="steeringAngle">STEERING ANGLE <output id="steeringAngleValue">8°</output></label>
+            <input id="steeringAngle" type="range" min="0" max="25" value="8" />
+          </div>
+        </div>
+
+        <div class="ackermann-copy">
+          <div class="technical-point">
+            <span>01</span>
+            <div><strong>FRONT WHEELS / STEERING</strong><p>The front wheels are responsible for steering. During a turn they follow different radii.</p></div>
+          </div>
+          <div class="technical-point">
+            <span>02</span>
+            <div><strong>REAR WHEELS / PROPULSION</strong><p>Two DC gear motors provide propulsion while the steering mechanism controls the front axle.</p></div>
+          </div>
+          <div class="technical-point">
+            <span>03</span>
+            <div><strong>CONTROL BEHAVIOR</strong><p>Steering geometry and speed management must work together during high-curvature sections.</p></div>
+          </div>
+          <div class="design-note"><strong>DESIGN NOTE</strong><p>Diagram is conceptual. Vehicle dimensions, wheelbase and steering limits should be replaced with measured values after mechanical validation.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HARDWARE -->
+    <section id="hardware" class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>09</span> HARDWARE STACK</div>
+        <h2>Built for <em>integration.</em></h2>
+      </div>
+
+      <div class="hardware-grid" id="hardwareGrid">
+        <!-- JS renders cards from configuration -->
+      </div>
+    </section>
+
+    <!-- PAYLOAD -->
+    <section class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>10</span> PAYLOAD & STABILITY</div>
+        <h2>Mass changes<br /><em>vehicle behavior.</em></h2>
+      </div>
+
+      <div class="payload-layout">
+        <div class="payload-diagram panel">
+          <div class="payload-switch">
+            <button class="payload-toggle active" data-load="0">NO PAYLOAD</button>
+            <button class="payload-toggle" data-load="5">5 KG PAYLOAD</button>
+          </div>
+          <svg viewBox="0 0 620 360" aria-label="Payload and center of gravity concept diagram">
+            <rect class="ground-line" x="40" y="285" width="540" height="4"/>
+            <g class="payload-vehicle" id="payloadVehicle">
+              <rect x="160" y="155" width="300" height="115" rx="22"/>
+              <rect x="185" y="177" width="250" height="73" rx="10"/>
+              <rect class="payload-mass" id="payloadMass" x="270" y="120" width="80" height="45" rx="5"/>
+              <text id="payloadMassText" x="310" y="147" text-anchor="middle">EMPTY</text>
+              <circle class="cog-dot" id="cogDot" cx="310" cy="212" r="9"/>
+              <text x="327" y="217">CG</text>
+              <circle class="wheel-dot" cx="205" cy="280" r="18"/>
+              <circle class="wheel-dot" cx="415" cy="280" r="18"/>
+              <rect class="camera-mount" x="293" y="100" width="34" height="20" rx="4"/>
+            </g>
+          </svg>
+          <div class="diagram-caption">CONCEPTUAL LOAD DISTRIBUTION / NOT A STRUCTURAL ANALYSIS</div>
+        </div>
+
+        <div class="payload-copy">
+          <p class="section-lead">A 5 kg payload influences the dynamic behavior of the vehicle. The design must consider:</p>
+          <div class="impact-list">
+            <div><span>01</span><strong>INERTIA</strong><small>Higher mass changes acceleration and braking behavior.</small></div>
+            <div><span>02</span><strong>TRACTION</strong><small>Load distribution affects available longitudinal and lateral grip.</small></div>
+            <div><span>03</span><strong>TURNING STABILITY</strong><small>Cornering behavior must remain predictable under load.</small></div>
+            <div><span>04</span><strong>CENTER OF GRAVITY</strong><small>Payload and camera mounting can shift the system CG.</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION STRATEGY -->
+    <section class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>11</span> NAVIGATION STRATEGY</div>
+        <h2>Get motion working.<br /><em>Keep vision as R&amp;D.</em></h2>
+      </div>
+
+      <div class="navigation-compare">
+        <article class="nav-card selected">
+          <div class="nav-card-top"><span>IMMEDIATE BRING-UP</span><b>● CURRENT FOCUS</b></div>
+          <h3>IR LINE TRACKING</h3>
+          <p>The latest messages focus on finishing the IR sensor board/inputs, checking channels and bringing up the steering servo and drive control. One sensor was reported faulty, so the array is not yet confirmed healthy.</p>
+          <div class="mini-specs"><span>LOWER PROCESSING LOAD</span><span>CHANNEL RETEST</span><span>BENCH INTEGRATION</span></div>
+        </article>
+
+        <div class="or-mark">+</div>
+
+        <article class="nav-card">
+          <div class="nav-card-top"><span>EXPERIMENTAL PATH</span><b class="amber-text">● NOT VALIDATED</b></div>
+          <h3>PHONE-CAMERA VISION</h3>
+          <p>Keep developing the wireless video, frame processing, ROI, path centroid and look-ahead PID pipeline separately until latency, compute load, mounting and end-to-end control are demonstrated.</p>
+          <div class="mini-specs"><span>LATENCY MEASUREMENT</span><span>CG / MOUNT REVIEW</span><span>VISION INTEGRATION</span></div>
+        </article>
+      </div>
+      <p class="source-note">This reflects the latest chat direction as of 8 October 2026; it does not mean the team has formally cancelled or finalised either approach.</p>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>12</span> ENGINEERING WORKFLOW</div>
+        <h2>From idea to<br /><em>validated machine.</em></h2>
+      </div>
+
+      <div class="workflow-grid" id="workflowGrid">
+        <!-- JS renders workflow -->
+      </div>
+    </section>
+
+    <!-- TESTING -->
+    <section id="testing" class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>13</span> VALIDATION PLAN</div>
+        <h2>Measure first.<br /><em>Claim later.</em></h2>
+      </div>
+
+      <div class="testing-header">
+        <p>Measured fields begin blank. Initial status values reflect reported tasks or open checks from the chat, not proof that a test passed. Enter actual readings only after physical measurement.</p>
+        <span class="tag warning">NO FABRICATED RESULTS</span>
+      </div>
+
+      <div class="table-wrap">
+        <table class="test-table">
+          <thead>
+            <tr>
+              <th>TEST</th>
+              <th>CONDITION</th>
+              <th>TARGET</th>
+              <th>MEASURED</th>
+              <th>STATUS</th>
+              <th>NOTES</th>
+            </tr>
+          </thead>
+          <tbody id="testTableBody">
+            <!-- JS renders rows -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- PROJECT STATUS -->
+    <section class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>14</span> PROJECT STATUS</div>
+        <h2>Track the <em>integration.</em></h2>
+      </div>
+
+      <div class="status-board" id="statusBoard">
+        <!-- JS renders boards -->
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section id="team" class="section dark-panel">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>15</span> TEAM DOMAINS</div>
+        <h2>Engineering works<br /><em>across disciplines.</em></h2>
+      </div>
+
+      <div class="team-grid">
+        <article class="team-card">
+          <span>01</span><h3>MECHANICAL</h3>
+          <p>CAD, chassis, Ackermann mechanism, fabrication, payload and stability.</p>
+          <small>TEAM MEMBERS / TBD</small>
+        </article>
+        <article class="team-card">
+          <span>02</span><h3>ELECTRONICS</h3>
+          <p>Schematics, motor-control electronics, sensors, power, wiring and board work.</p>
+          <small>TEAM MEMBERS / TBD</small>
+        </article>
+        <article class="team-card">
+          <span>03</span><h3>CODING / EMBEDDED</h3>
+          <p>ESP32-S3, camera communication, vision processing, PID, motor control and encoders.</p>
+          <small>TEAM MEMBERS / TBD</small>
+        </article>
+        <article class="team-card">
+          <span>04</span><h3>WEB DEVELOPMENT</h3>
+          <p>Engineering dashboard, project documentation, visualization and telemetry interface.</p>
+          <small>TEAM MEMBERS / TBD</small>
+        </article>
+      </div>
+    </section>
+
+    <!-- SOFTWARE -->
+    <section class="section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>16</span> SOFTWARE / REPOSITORY</div>
+        <h2>Keep the code<br /><em>connected.</em></h2>
+      </div>
+
+      <div class="software-grid">
+        <article class="software-card"><span>REPOSITORY</span><strong>GitHub</strong><p>Repository link shared in the team chat. Check permissions and branch contents before treating it as the source of truth.</p><a href="https://github.com/souvikn/Robocon-Problem-4" class="external-link" target="_blank" rel="noopener noreferrer">OPEN REPOSITORY ↗</a></article>
+        <article class="software-card"><span>EMBEDDED</span><strong>ESP32-S3</strong><p>Official GPIO/peripheral documentation for validating pin mapping and PWM routing.</p><a href="https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/peripherals/gpio.html" class="external-link" target="_blank" rel="noopener noreferrer">ESPRESSIF DOCS ↗</a></article>
+        <article class="software-card"><span>VISION / CONTROL</span><strong>Line Following + PID</strong><p>Examples shared by the team for research context. Adapt carefully to the actual chassis and sensors.</p><a href="https://www.instructables.com/Make-a-FAST-Line-Follower-Robot-Using-PID/" class="external-link" target="_blank" rel="noopener noreferrer">OPEN REFERENCE ↗</a></article>
+        <article class="software-card"><span>RESEARCH</span><strong>Industrial Line Follower</strong><p>Background article shared in the conversation; useful as a starting point, not a substitute for test data.</p><a href="https://www.researchgate.net/publication/377572404_Building_an_Industrial_Autonomous_Line-Following_Robot_through_the_Design_and_Construction_Processes" class="external-link" target="_blank" rel="noopener noreferrer">READ PAPER ↗</a></article>
+      </div>
+    </section>
+
+    <!-- REFERENCES -->
+    <section id="resources" class="section references-section">
+      <div class="section-heading compact">
+        <div class="section-kicker"><span>17</span> TEAM-SHARED REFERENCES</div>
+        <h2>Useful links.<br /><em>Verify before building.</em></h2>
+      </div>
+      <p class="section-lead reference-intro">These resources appeared in the project conversation. They are provided for documentation and research; the exact circuit, component rating and board revision still need checking against official datasheets and mentor review.</p>
+      <div class="resource-grid">
+        <a class="resource-card" href="https://github.com/souvikn/Robocon-Problem-4" target="_blank" rel="noopener noreferrer"><span>01 / SOURCE</span><strong>Robocon Problem 4 Repository</strong><small>GitHub · shared by the team ↗</small></a>
+        <a class="resource-card" href="https://www.instructables.com/High-performance-Line-follower-Robot/" target="_blank" rel="noopener noreferrer"><span>02 / HARDWARE</span><strong>High-performance Line Follower</strong><small>Instructables · reference build ↗</small></a>
+        <a class="resource-card" href="https://www.instructables.com/Make-a-FAST-Line-Follower-Robot-Using-PID/" target="_blank" rel="noopener noreferrer"><span>03 / CONTROL</span><strong>Fast Line Follower Using PID</strong><small>Instructables · algorithm context ↗</small></a>
+        <a class="resource-card" href="https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/peripherals/gpio.html" target="_blank" rel="noopener noreferrer"><span>04 / OFFICIAL DOCS</span><strong>ESP32-S3 GPIO</strong><small>Espressif documentation ↗</small></a>
+        <a class="resource-card" href="https://www.mouser.in/datasheet/3/70/1/Infineon_BTN8982TA_DS_v01_00_EN.pdf" target="_blank" rel="noopener noreferrer"><span>05 / DATASHEET</span><strong>BTN8982TA Reference</strong><small>Candidate discussed only · not a selected driver ↗</small></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div>
+        <div class="footer-mark">HVAIV</div>
+        <p>High-Speed Vision-Guided<br />Autonomous Inspection Vehicle</p>
+      </div>
+      <div class="footer-status">
+        <span class="status-dot"></span>
+        ACTIVE DEVELOPMENT
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>MECHANICAL · ELECTRONICS · EMBEDDED · VISION · CONTROL · WEB</span>
+      <span>ENGINEERING DEVELOPMENT PROJECT / 2026</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
